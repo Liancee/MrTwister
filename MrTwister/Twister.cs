@@ -9,7 +9,7 @@ namespace MrTwister
 {
     class Twister
     {
-        private static readonly string[] ListOfWords = File.ReadAllLines(@"C:\Users\linden\Downloads\woerterliste.txt");
+        private static readonly string[] ListOfWords = File.ReadAllLines(@"E:\vsProjects\MrTwister\woerterliste.txt");
 
         public List<string> Twist(string inputString)
         {
@@ -54,17 +54,18 @@ namespace MrTwister
                 foreach (var word in filteredList)
                 {
                     var wordcopy = word.Substring(1, word.Length - 2); //derzeitiges Wort aus der Liste ohne Anfangs,- Endbuchstaben
-                    var twistedWordcopy = word.Substring(1, twistedWord.Length - 2); //derzeitiges verdrehtes Wort ohne Anfangs,- Endbuchstaben
-                    wordcopy.Count(x => )
+                    var twistedWordcopy = twistedWord.Substring(1, twistedWord.Length - 2); //derzeitiges verdrehtes Wort ohne Anfangs,- Endbuchstaben
+                    if (string.Join("", wordcopy.OrderBy(c => c)).Equals(string.Join("", twistedWordcopy.OrderBy(c => c))))
+                        result.Add(word);
 
-                    for (int i = 1; i < twistedWord.Length; i++)
-                    {
-                        if (wordcopy.Contains(twistedWord[i]))
+                    //for (int i = 1; i < twistedWord.Length; i++)
+                    //{
+                    //    if (wordcopy.Contains(twistedWord[i]))
 
-                            wordcopy = wordcopy.Remove(wordcopy.LastIndexOf(twistedWord[i]));
-                        wordcopy.re
-                    }
-                    if (wordcopy.Length == 0) result.Add(word);
+                        //        wordcopy = wordcopy.Remove(wordcopy.LastIndexOf(twistedWord[i]));
+                        //    wordcopy.re
+                        //}
+                        //if (wordcopy.Length == 0) result.Add(word);
                 }
                 return result;
             }
