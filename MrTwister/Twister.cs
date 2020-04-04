@@ -45,31 +45,24 @@ namespace MrTwister
             return returnWord += lastLetter;
             
         }
-        public List<string> Detwist(string twistedWord)
+        public List<string> Detwist(string input)
         {
+            string twistedWord = input.ToUpper();
             if (twistedWord.Length > 3)
             {
-                var filteredList = ListOfWords.Where(x => x.StartsWith(twistedWord.First().ToString()) && x.EndsWith(twistedWord.Last().ToString()) && x.Length == twistedWord.Length).ToList();
+                var filteredList = ListOfWords.Where(x => x.ToUpper().StartsWith(twistedWord.First().ToString()) && x.ToUpper().EndsWith(twistedWord.Last().ToString()) && x.Length == twistedWord.Length).ToList();
                 var result = new List<string>();
                 foreach (var word in filteredList)
                 {
-                    var wordcopy = word.Substring(1, word.Length - 2); //derzeitiges Wort aus der Liste ohne Anfangs,- Endbuchstaben
-                    var twistedWordcopy = twistedWord.Substring(1, twistedWord.Length - 2); //derzeitiges verdrehtes Wort ohne Anfangs,- Endbuchstaben
-                    if (string.Join("", wordcopy.OrderBy(c => c)).Equals(string.Join("", twistedWordcopy.OrderBy(c => c))))
+                    //var wordcopy = word.Substring(1, word.Length - 2); //derzeitiges Wort aus der Liste ohne Anfangs,- Endbuchstaben
+                    //var twistedWordcopy = twistedWord.Substring(1, twistedWord.Length - 2).ToUpper(); //derzeitiges verdrehtes Wort ohne Anfangs,- Endbuchstaben
+                    //if (string.Join("", wordcopy.OrderBy(c => c)).Equals(string.Join("", twistedWordcopy.OrderBy(c => c))))
+                    if (Enumerable.SequenceEqual(word.ToUpper().OrderBy(c => c), twistedWord.ToUpper().OrderBy(c => c)))
                         result.Add(word);
-
-                    //for (int i = 1; i < twistedWord.Length; i++)
-                    //{
-                    //    if (wordcopy.Contains(twistedWord[i]))
-
-                        //        wordcopy = wordcopy.Remove(wordcopy.LastIndexOf(twistedWord[i]));
-                        //    wordcopy.re
-                        //}
-                        //if (wordcopy.Length == 0) result.Add(word);
                 }
                 return result;
             }
-            return new List<string>() { "Makes absolutely no sense to enttwist a word with less than 4 letters." }; //macht das Sinn? Wird das benutzt?
+            return new List<string>() { "Makes absolutely no sense to enttwist a word with less than 4 letters." }; //macht das Sinn? Wird das benutzt? Glaube der Fall tritt nicht mehr auf
         }
     }
 }

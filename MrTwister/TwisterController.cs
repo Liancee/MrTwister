@@ -50,7 +50,7 @@ namespace MrTwister
                 {
                     WriteInColor($"<Green [{twistedWord}]\\> <Red hasn't more than 3 characters, which means neither twisting nor detwisting makes sense here. Go ahead and restart to try again hitting ur keyboard four times in a row or just exit, gl!\\>");
                     System.Threading.Thread.Sleep(3000);
-                    RestartOrExitDialog();
+                    RestartOrExitDialog(); 
                 }
                 if (twistedWord.Count() < 4 && twistedInput.Count > 1)
                 {
@@ -71,7 +71,8 @@ namespace MrTwister
                         switch (readKey.Key)
                         {
                             case ConsoleKey.D1:
-                                weDidSth++; //sinnlos weil return?
+                                weDidSth++;
+                                Console.WriteLine("\n-------------------------------------------------------------------------------\n");
                                 break; //soll hier ins nächste twistedWord returnen
                             case ConsoleKey.D2:
                                 weDidSth++;
@@ -79,16 +80,28 @@ namespace MrTwister
                                 switch (entwistedWordPossibilities.Count)
                                 {
                                     case 0:
-                                        WriteInColor($"Couldn't detwist <Green [{twistedWord}]\\>. Continueing with next word");
+                                        WriteInColor($"Couldn't detwist <Green [{twistedWord}]\\>.");
+                                        System.Threading.Thread.Sleep(1500);
+                                        Console.WriteLine("Continueing with next word..");
+                                        System.Threading.Thread.Sleep(1500);
+                                        Console.WriteLine("\n-------------------------------------------------------------------------------\n");
                                         break; //soll hier ins nächste twistedWord returnen
                                     case 1:
                                         WriteInColor($"The word was: <Green [{entwistedWordPossibilities.First()}]\\>");
-                                        break; //Soll im while loop bleiben um nach nächster Anweisung zu warten, vlt mir var weDidSth?
+                                        System.Threading.Thread.Sleep(1500);
+                                        Console.WriteLine("Continueing with next word..");
+                                        System.Threading.Thread.Sleep(1500);
+                                        Console.WriteLine("\n-------------------------------------------------------------------------------\n");
+                                        break;
                                     default:
                                         WriteInColor("The word was one of these:\n");
                                         foreach (var possibleword in entwistedWordPossibilities)
                                             Console.WriteLine(possibleword);
-                                        break; //Soll im while loop bleiben um nach nächster Anweisung zu warten, vlt mir var weDidSth?
+                                        System.Threading.Thread.Sleep(1500);
+                                        Console.WriteLine("Continueing with next word..");
+                                        System.Threading.Thread.Sleep(1500);
+                                        Console.WriteLine("\n-------------------------------------------------------------------------------\n");
+                                        break;
                                 }
                                 break;
                             case ConsoleKey.D3:
@@ -115,22 +128,24 @@ namespace MrTwister
                         switch (readKey.Key)
                         {
                             case ConsoleKey.D1:
-                                Console.Clear();
                                 var entwistedWordPossibilities = twister.Detwist(twistedWord);
                                 switch (entwistedWordPossibilities.Count)
                                 {
                                     case 0:
                                         WriteInColor($"Couldn't detwist <Green [{twistedWord}]\\>.");
+                                        Console.WriteLine("\n-------------------------------------------------------------------------------\n");
                                         RestartOrExitDialog();
                                         return;
                                     case 1:
                                         WriteInColor($"The word was: <Green [{entwistedWordPossibilities.First()}]\\>");
+                                        Console.WriteLine("\n-------------------------------------------------------------------------------\n");
                                         RestartOrExitDialog();
                                         return;
                                     default:
                                         WriteInColor("The word was one of these:\n");
                                         foreach (var possibleword in entwistedWordPossibilities)
                                             Console.WriteLine(possibleword);
+                                        Console.WriteLine("\n-------------------------------------------------------------------------------\n");
                                         RestartOrExitDialog();
                                         return;
                                 }
