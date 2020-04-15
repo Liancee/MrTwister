@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace MrTwister
@@ -43,12 +44,36 @@ namespace MrTwister
             var twister = new Twister();
             Console.WriteLine("Gimme the word/sentence that's supposed to be twisted");
             //Nur Wörter, Sätze mit normalen Zeichen akzeptieren
-            var twistedInput = twister.Twist(Console.ReadLine());
+            var wordList = Console.ReadLine().Split(' ').ToList();
+            if (wordList == null)
+            {
+                Console.WriteLine("Go ahead and try hitting your keyboard this time, gl!");
+                StartTwister();
+            }
+            var twistedInput = twister.Twist(wordList);
+            var inputSanitizingRegEx = new Regex(@"^[a-zA-Z]+$");
             foreach (var twistedWord in twistedInput)
             {
-                if(twistedWord.Count() < 4 && twistedInput.Count == 1)
+                if (!inputSanitizingRegEx.IsMatch(twistedWord))
                 {
-                    WriteInColor($"<Green [{twistedWord}]\\> <Red hasn't more than 3 characters, which means neither twisting nor detwisting makes sense here. Go ahead and restart to try again hitting ur keyboard four times in a row or just exit, gl!\\>");
+                    if (twistedInput.Count == 1)
+                    {
+                        if (twistedWord.Length > 3)
+                            WriteInColor($"<Red Unfortunately your input\\><Green [{wordList.ElementAt(twistedInput.IndexOf(twistedWord))}]\\> <Red had numbers or other non valid characters, which makes detwisting impossible. At least here is your twisted word\\> <Green [{twistedWord}]\\><Red .\\>");
+                        else WriteInColor($"<Red Unfortunately your input\\><Green [{wordList.ElementAt(twistedInput.IndexOf(twistedWord))}]\\> <Red had numbers or other non valid characters, which makes detwisting impossible. Even twisting makes no sense since you did not manage to hit your keyboard at least 4 times.. I guess you have to get along with only your input, I am terribly sorry.\\>");
+                        System.Threading.Thread.Sleep(3000);
+                        RestartOrExitDialog();
+                    }
+                    if (twistedWord.Length > 3)
+                        WriteInColor($"<Red Unfortunately your input\\><Green [{wordList.ElementAt(twistedInput.IndexOf(twistedWord))}]\\> <Red had numbers or other non valid characters, which makes detwisting impossible. At least here is your twisted word\\> <Green [{twistedWord}]\\><Red . We will continue with the next word.\\>");
+                    else WriteInColor($"<Red Unfortunately your input\\><Green [{wordList.ElementAt(twistedInput.IndexOf(twistedWord))}]\\> <Red had numbers or other non valid characters, which makes detwisting impossible. Even twisting makes no sense since you did not manage to hit your keyboard at least 4 times.. I guess you have to get along with only your input, I am terribly sorry. We will continue with the next word.\\>");
+                    System.Threading.Thread.Sleep(3000);
+                    Console.WriteLine("\n-------------------------------------------------------------------------------\n");
+                    continue;
+                }
+                if (twistedWord.Count() < 4 && twistedInput.Count == 1)
+                {
+                    WriteInColor($"<Green [{twistedWord}]\\> <Red hasn't more than 3 characters, which means neither twisting nor detwisting makes sense here. Go ahead and restart to try again hitting your keyboard four times in a row or just exit, gl!\\>");
                     System.Threading.Thread.Sleep(3000);
                     RestartOrExitDialog(); 
                 }
@@ -56,6 +81,7 @@ namespace MrTwister
                 {
                     WriteInColor($"<Green [{twistedWord}]\\> <Red hasn't more than 3 characters, which means neither twisting nor detwisting makes sense here. We will continue with the next word.\\>");
                     System.Threading.Thread.Sleep(3000);
+                    Console.WriteLine("\n-------------------------------------------------------------------------------\n");
                     continue;
                 }
                 Console.Write("Twisted word: ");
