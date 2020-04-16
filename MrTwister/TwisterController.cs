@@ -43,84 +43,109 @@ namespace MrTwister
 
             var twister = new Twister();
             Console.WriteLine("Gimme the word/sentence that's supposed to be twisted");
-            //Nur Wörter, Sätze mit normalen Zeichen akzeptieren
-            var wordList = Console.ReadLine().Split(' ').ToList();
-            if (wordList == null)
+            var wordList = Regex.Replace(Console.ReadLine(), @"(\s+)", " ").Split(' ').Where(x => x != string.Empty || x != "").ToList();
+            if (wordList.Count == 1 && wordList[0] == string.Empty)
             {
-                Console.WriteLine("Go ahead and try hitting your keyboard this time, gl!");
+                Auxiliary_methods.WriteInColor("<Red Try again and hit your keyboard this time, gl!\\>\n");
+
                 StartTwister();
             }
             var twistedInput = twister.Twist(wordList);
             var inputSanitizingRegEx = new Regex(@"^[a-zA-Z]+$");
-            foreach (var twistedWord in twistedInput)
+            string twistedWord = string.Empty;
+            //foreach (var twistedWord in twistedInput)
+            for (int posInTwistedInput = 0; posInTwistedInput < twistedInput.Count; posInTwistedInput++)
             {
+                twistedWord = twistedInput[posInTwistedInput];
                 if (!inputSanitizingRegEx.IsMatch(twistedWord))
                 {
-                    if (twistedInput.Count == 1)
+                    if (twistedInput.Count == 1 || posInTwistedInput == twistedInput.Count - 1)
                     {
                         if (twistedWord.Length > 3)
-                            WriteInColor($"<Red Unfortunately your input\\><Green [{wordList.ElementAt(twistedInput.IndexOf(twistedWord))}]\\> <Red had numbers or other non valid characters, which makes detwisting impossible. At least here is your twisted word\\> <Green [{twistedWord}]\\><Red .\\>");
-                        else WriteInColor($"<Red Unfortunately your input\\><Green [{wordList.ElementAt(twistedInput.IndexOf(twistedWord))}]\\> <Red had numbers or other non valid characters, which makes detwisting impossible. Even twisting makes no sense since you did not manage to hit your keyboard at least 4 times.. I guess you have to get along with only your input, I am terribly sorry.\\>");
+                            Auxiliary_methods.WriteInColor($"<Red Unfortunately your input\\><Green [{wordList.ElementAt(twistedInput.IndexOf(twistedWord))}]\\> <Red had numbers or other non valid characters, which makes detwisting impossible. At least here is your twisted word\\> <Green [{twistedWord}]\\><Red .\\>");
+                        else Auxiliary_methods.WriteInColor($"<Red Unfortunately your input\\><Green [{wordList.ElementAt(twistedInput.IndexOf(twistedWord))}]\\> <Red had numbers or other non valid characters, which makes detwisting impossible. Even twisting makes no sense since you did not manage to hit your keyboard at least four times.. I guess you have to get along with only your input, I am terribly sorry.\\>");
+                        System.Threading.Thread.Sleep(3000);
+                        RestartOrExitDialog(); //\n davor?
+                    }
+                    if (twistedWord.Length > 3)
+                        Auxiliary_methods.WriteInColor($"<Red Unfortunately your input\\><Green [{wordList.ElementAt(twistedInput.IndexOf(twistedWord))}]\\> <Red had numbers or other non valid characters, which makes detwisting impossible. At least here is your twisted word\\> <Green [{twistedWord}]\\><Red . We will continue with the next word.\\>");
+                    else Auxiliary_methods.WriteInColor($"<Red Unfortunately your input\\><Green [{wordList.ElementAt(twistedInput.IndexOf(twistedWord))}]\\> <Red had numbers or other non valid characters, which makes detwisting impossible. Even twisting makes no sense since you did not manage to hit your keyboard at least four times.. I guess you have to get along with only your input, I am terribly sorry. We will continue with the next word.\\>");
+                    System.Threading.Thread.Sleep(3000);
+                    Console.WriteLine("\n-------------------------------------------------------------------------------\n");
+                    continue;
+                }
+
+                if (twistedWord.Length < 4)
+                {
+                    if (posInTwistedInput == twistedInput.Count - 1)
+                    {
+                        Auxiliary_methods.WriteInColor($"<Green [{twistedWord}]\\> <Red has not more than three characters, which means neither twisting nor detwisting makes sense here. Go ahead and restart to try again hitting your keyboard four times in a row or just exit, gl!\\>\n");
                         System.Threading.Thread.Sleep(3000);
                         RestartOrExitDialog();
                     }
-                    if (twistedWord.Length > 3)
-                        WriteInColor($"<Red Unfortunately your input\\><Green [{wordList.ElementAt(twistedInput.IndexOf(twistedWord))}]\\> <Red had numbers or other non valid characters, which makes detwisting impossible. At least here is your twisted word\\> <Green [{twistedWord}]\\><Red . We will continue with the next word.\\>");
-                    else WriteInColor($"<Red Unfortunately your input\\><Green [{wordList.ElementAt(twistedInput.IndexOf(twistedWord))}]\\> <Red had numbers or other non valid characters, which makes detwisting impossible. Even twisting makes no sense since you did not manage to hit your keyboard at least 4 times.. I guess you have to get along with only your input, I am terribly sorry. We will continue with the next word.\\>");
-                    System.Threading.Thread.Sleep(3000);
-                    Console.WriteLine("\n-------------------------------------------------------------------------------\n");
-                    continue;
-                }
-                if (twistedWord.Count() < 4 && twistedInput.Count == 1)
-                {
-                    WriteInColor($"<Green [{twistedWord}]\\> <Red hasn't more than 3 characters, which means neither twisting nor detwisting makes sense here. Go ahead and restart to try again hitting your keyboard four times in a row or just exit, gl!\\>");
-                    System.Threading.Thread.Sleep(3000);
-                    RestartOrExitDialog(); 
-                }
-                if (twistedWord.Count() < 4 && twistedInput.Count > 1)
-                {
-                    WriteInColor($"<Green [{twistedWord}]\\> <Red hasn't more than 3 characters, which means neither twisting nor detwisting makes sense here. We will continue with the next word.\\>");
-                    System.Threading.Thread.Sleep(3000);
-                    Console.WriteLine("\n-------------------------------------------------------------------------------\n");
-                    continue;
-                }
-                Console.Write("Twisted word: ");
-                WriteInColor($"<Green [{twistedWord}]\\>");
-                if (twistedInput.Count > 1 && twistedWord != twistedInput.Last()) // Muss nach den oberen if's eigentlich nicht mehr auf Länge abgefragt werden aber w.e
-                {
-                    var weDidSth = 0;
-                    while (weDidSth == 0)
+                    if (twistedInput.Count > 1)
                     {
-                        WriteInColor($"Press <DarkYellow [1]\\> to show next twisted word, <DarkYellow [2]\\> to try enttwisting, <DarkYellow [3]\\> to restart or <DarkYellow [4]\\> to exit.");
-                        var readKey = Console.ReadKey();
+                        Auxiliary_methods.WriteInColor($"<Green [{twistedWord}]\\> <Red has not more than three characters, which means neither twisting nor detwisting makes sense here. We will continue with the next word.\\>");
+                        System.Threading.Thread.Sleep(3000);
+                        Console.WriteLine("\n-------------------------------------------------------------------------------\n");
+                        continue;
+                    }
+                }
+
+                if (!Auxiliary_methods.ContainsDifferentLetters(twistedWord))
+                {
+                    if (posInTwistedInput == twistedInput.Count - 1)
+                    {
+                        Auxiliary_methods.WriteInColor($"<Green [{twistedWord}]\\> <Red since every letter is the same except the first and the last, there is no point in doing anything here. Restart and find some different button this time, gl!\\>\n");
+                        System.Threading.Thread.Sleep(3000);
+                        RestartOrExitDialog();
+                    }
+                    if (twistedInput.Count > 1)
+                    {
+                        Auxiliary_methods.WriteInColor($"<Green [{twistedWord}]\\> <Red since every letter is the same except the first and the last, there is no point in doing anything here. We will continue with the next word.\\>");
+                        System.Threading.Thread.Sleep(3000);
+                        Console.WriteLine("\n-------------------------------------------------------------------------------\n");
+                        continue;
+                    }
+                }
+                
+                Console.Write("Twisted word: ");
+                Auxiliary_methods.WriteInColor($"<Green [{twistedWord}]\\>");
+                if (twistedInput.Count > 1 && posInTwistedInput != twistedInput.Count - 1)
+                {
+                    var validKey = false;
+                    while (!validKey)
+                    {
+                        Auxiliary_methods.WriteInColor($"Press <DarkYellow [1]\\> to show next twisted word, <DarkYellow [2]\\> to try enttwisting, <DarkYellow [3]\\> to restart or <DarkYellow [4]\\> to exit.");
+                        var readKey = Console.ReadKey(true);
 
                         switch (readKey.Key)
                         {
                             case ConsoleKey.D1:
-                                weDidSth++;
+                                validKey = true;
                                 Console.WriteLine("\n-------------------------------------------------------------------------------\n");
                                 break; //soll hier ins nächste twistedWord returnen
                             case ConsoleKey.D2:
-                                weDidSth++;
+                                validKey = true;
                                 var entwistedWordPossibilities = twister.Detwist(twistedWord);
                                 switch (entwistedWordPossibilities.Count)
                                 {
                                     case 0:
-                                        WriteInColor($"Couldn't detwist <Green [{twistedWord}]\\>.");
+                                        Auxiliary_methods.WriteInColor($"Couldn't detwist <Green [{twistedWord}]\\>.");
                                         System.Threading.Thread.Sleep(1500);
                                         Console.WriteLine("Continueing with next word..");
                                         System.Threading.Thread.Sleep(1500);
                                         Console.WriteLine("\n-------------------------------------------------------------------------------\n");
                                         break; //soll hier ins nächste twistedWord returnen
                                     case 1:
-                                        WriteInColor($"The word was: <Green [{entwistedWordPossibilities.First()}]\\>");
+                                        Auxiliary_methods.WriteInColor($"The word was: <Green [{entwistedWordPossibilities.First()}]\\>");
                                         System.Threading.Thread.Sleep(1500);
                                         Console.WriteLine("Continueing with next word..");
                                         System.Threading.Thread.Sleep(1500);
                                         Console.WriteLine("\n-------------------------------------------------------------------------------\n");
                                         break;
                                     default:
-                                        WriteInColor("The word was one of these:\n");
+                                        Auxiliary_methods.WriteInColor("The word was one of these:\n");
                                         foreach (var possibleword in entwistedWordPossibilities)
                                             Console.WriteLine(possibleword);
                                         System.Threading.Thread.Sleep(1500);
@@ -132,24 +157,24 @@ namespace MrTwister
                                 break;
                             case ConsoleKey.D3:
                                 Console.Clear();
-                                weDidSth++;
+                                validKey = true;
                                 StartTwister(); //Hier soll er die momentane Session komplett killen zum restarten --> ok ist doch egal, da es sowieso immer irgendwann mit exit gekilled wird
                                 break;
                             case ConsoleKey.D4:
                                 Console.Clear();
-                                weDidSth++;
+                                validKey = true;
                                 Environment.Exit(0); //Jo der Exit halt
                                 break;
                         }
                     }
                 }
-                else
+                else //hier kommt er nur her wenn es das letzte Wort der Liste ist und über 3 Buchstaben hat
                 {
                     bool validKey = false;
                     while (!validKey)
                     {
-                        WriteInColor("Press <DarkYellow [1]\\> to try enttwisting, <DarkYellow [2]\\> to restart or <DarkYellow [3]\\> to exit.");
-                        var readKey = Console.ReadKey();
+                        Auxiliary_methods.WriteInColor("Press <DarkYellow [1]\\> to try enttwisting, <DarkYellow [2]\\> to restart or <DarkYellow [3]\\> to exit.");
+                        var readKey = Console.ReadKey(true);
 
                         switch (readKey.Key)
                         {
@@ -158,17 +183,17 @@ namespace MrTwister
                                 switch (entwistedWordPossibilities.Count)
                                 {
                                     case 0:
-                                        WriteInColor($"Couldn't detwist <Green [{twistedWord}]\\>.");
+                                        Auxiliary_methods.WriteInColor($"Couldn't detwist <Green [{twistedWord}]\\>.");
                                         Console.WriteLine("\n-------------------------------------------------------------------------------\n");
                                         RestartOrExitDialog();
                                         return;
                                     case 1:
-                                        WriteInColor($"The word was: <Green [{entwistedWordPossibilities.First()}]\\>");
+                                        Auxiliary_methods.WriteInColor($"The word was: <Green [{entwistedWordPossibilities.First()}]\\>");
                                         Console.WriteLine("\n-------------------------------------------------------------------------------\n");
                                         RestartOrExitDialog();
                                         return;
                                     default:
-                                        WriteInColor("The word was one of these:\n");
+                                        Auxiliary_methods.WriteInColor("The word was one of these:\n");
                                         foreach (var possibleword in entwistedWordPossibilities)
                                             Console.WriteLine(possibleword);
                                         Console.WriteLine("\n-------------------------------------------------------------------------------\n");
@@ -188,29 +213,12 @@ namespace MrTwister
                 }
             }
         }
-        private void WriteInColor(string output)
-        {
-            string endSymbol = @"\>";
-            int startIndexOfStartColoredOutputString = output.IndexOf('<');
-            if (startIndexOfStartColoredOutputString == - 1)
-                Console.WriteLine(output);
-            else
-            {
-                Console.Write(output.Substring(0, startIndexOfStartColoredOutputString));
-                int endIndexOfColor = output.IndexOf(" ", startIndexOfStartColoredOutputString) - 1;
-                var color = (ConsoleColor) Enum.Parse(typeof(ConsoleColor), output.Substring(startIndexOfStartColoredOutputString + 1, endIndexOfColor - startIndexOfStartColoredOutputString + 1));
-                Console.ForegroundColor = color;
-                int endIndexOfColoredOutputString = output.IndexOf(endSymbol) - 1;
-                Console.Write(output.Substring(endIndexOfColor + 2, endIndexOfColoredOutputString - endIndexOfColor - 1));
-                Console.ForegroundColor = ConsoleColor.White;
-                WriteInColor(output.Substring(endIndexOfColoredOutputString + 3));
-            }
-        }
+        
         private void RestartOrExitDialog()
         {
             while (true)
             {
-                WriteInColor("Press <DarkYellow [1]\\> to restart or <DarkYellow [2]\\> to exit.");
+                Auxiliary_methods.WriteInColor("Press <DarkYellow [1]\\> to restart or <DarkYellow [2]\\> to exit.");
                 var readKey = Console.ReadKey();
 
                 switch (readKey.Key)
