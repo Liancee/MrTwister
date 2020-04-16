@@ -13,9 +13,14 @@ namespace MrTwister
         string[] ListOfWords = null;
         public Twister()
         {
-            ListOfWords = woerterliste.Woerterliste.Split('\n');
+            ListOfWords = woerterliste.Woerterliste.Replace("\r", "").Split('\n');
         }
-        public List<string> Twist(List<string> wordList)
+        /// <summary>
+        /// Twisting each string of an IEnumerable with a length of at least four letters 
+        /// </summary>
+        /// <param name="wordList"></param>
+        /// <returns></returns>
+        public IEnumerable<string> Twist(IEnumerable<string> wordList)
         {
             var returnList = new List<string>();
             foreach (var input in wordList)
@@ -53,6 +58,12 @@ namespace MrTwister
             } //Springt dann in den nächsten Schleifendurchlauf, bis nur noch ein Buchstabe da ist
             return returnWord += lastLetter; //Fügt den letzten Buchstaben wieder ran und et voilà das Wort ist getwistet
         }
+        /// <summary>
+        /// Returns all possible values that the input could have been by comparing it to a list of words
+        /// <see cref="woerterliste"/>
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
         public List<string> Detwist(string input)
         {
             string twistedWord = input.ToUpper(); //Der input wird in Großbuchstaben zwischengespeichert, damit case-insensitive nach dem Wort geprüft werden kann

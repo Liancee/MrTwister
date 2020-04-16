@@ -42,12 +42,12 @@ namespace MrTwister
             #endregion
 
             var twister = new Twister();
-            Console.WriteLine("Gimme the word/sentence that's supposed to be twisted");
+            Console.WriteLine("Give me the word/sentence that is supposed to be twisted");
             var wordList = Regex.Replace(Console.ReadLine(), @"(\s+)", " ").Split(' ').Where(x => x != string.Empty || x != "").ToList();
             if (wordList.Count == 1 && wordList[0] == string.Empty)
             {
                 Auxiliary_methods.WriteInColor("<Red Try again and hit your keyboard this time, gl!\\>\n");
-
+                //alten Twister disposen?
                 StartTwister();
             }
             var twistedInput = twister.Twist(wordList);
@@ -121,7 +121,7 @@ namespace MrTwister
                     while (!validKey)
                     {
                         var readKey = Console.ReadKey(true);
-
+                        
                         switch (readKey.Key)
                         {
                             case ConsoleKey.D1:
@@ -178,7 +178,7 @@ namespace MrTwister
                     while (!validKey)
                     {
                         var readKey = Console.ReadKey(true);
-
+                        
                         switch (readKey.Key)
                         {
                             case ConsoleKey.D1:
@@ -220,10 +220,11 @@ namespace MrTwister
         private void RestartOrExitDialog()
         {
             Auxiliary_methods.WriteInColor("Press <DarkYellow [1]\\> to restart or <DarkYellow [2]\\> to exit.");
-            while (true)
+            bool validKey = false;
+            while (!validKey)
             {
-                var readKey = Console.ReadKey();
-
+                var readKey = Console.ReadKey(true);
+                
                 switch (readKey.Key)
                 {
                     case ConsoleKey.D1:
