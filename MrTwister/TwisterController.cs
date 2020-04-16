@@ -65,7 +65,8 @@ namespace MrTwister
                             Auxiliary_methods.WriteInColor($"<Red Unfortunately your input\\><Green [{wordList.ElementAt(twistedInput.IndexOf(twistedWord))}]\\> <Red had numbers or other non valid characters, which makes detwisting impossible. At least here is your twisted word\\> <Green [{twistedWord}]\\><Red .\\>");
                         else Auxiliary_methods.WriteInColor($"<Red Unfortunately your input\\><Green [{wordList.ElementAt(twistedInput.IndexOf(twistedWord))}]\\> <Red had numbers or other non valid characters, which makes detwisting impossible. Even twisting makes no sense since you did not manage to hit your keyboard at least four times.. I guess you have to get along with only your input, I am terribly sorry.\\>");
                         System.Threading.Thread.Sleep(3000);
-                        RestartOrExitDialog(); //\n davor?
+                        Console.WriteLine("\n-------------------------------------------------------------------------------\n");
+                        RestartOrExitDialog();
                     }
                     if (twistedWord.Length > 3)
                         Auxiliary_methods.WriteInColor($"<Red Unfortunately your input\\><Green [{wordList.ElementAt(twistedInput.IndexOf(twistedWord))}]\\> <Red had numbers or other non valid characters, which makes detwisting impossible. At least here is your twisted word\\> <Green [{twistedWord}]\\><Red . We will continue with the next word.\\>");
@@ -81,6 +82,7 @@ namespace MrTwister
                     {
                         Auxiliary_methods.WriteInColor($"<Green [{twistedWord}]\\> <Red has not more than three characters, which means neither twisting nor detwisting makes sense here. Go ahead and restart to try again hitting your keyboard four times in a row or just exit, gl!\\>\n");
                         System.Threading.Thread.Sleep(3000);
+                        Console.WriteLine("\n-------------------------------------------------------------------------------\n");
                         RestartOrExitDialog();
                     }
                     if (twistedInput.Count > 1)
@@ -98,6 +100,7 @@ namespace MrTwister
                     {
                         Auxiliary_methods.WriteInColor($"<Green [{twistedWord}]\\> <Red since every letter is the same except the first and the last, there is no point in doing anything here. Restart and find some different button this time, gl!\\>\n");
                         System.Threading.Thread.Sleep(3000);
+                        Console.WriteLine("\n-------------------------------------------------------------------------------\n");
                         RestartOrExitDialog();
                     }
                     if (twistedInput.Count > 1)
@@ -113,10 +116,10 @@ namespace MrTwister
                 Auxiliary_methods.WriteInColor($"<Green [{twistedWord}]\\>");
                 if (twistedInput.Count > 1 && posInTwistedInput != twistedInput.Count - 1)
                 {
+                    Auxiliary_methods.WriteInColor($"Press <DarkYellow [1]\\> to show next twisted word, <DarkYellow [2]\\> to try enttwisting, <DarkYellow [3]\\> to restart or <DarkYellow [4]\\> to exit.");
                     var validKey = false;
                     while (!validKey)
                     {
-                        Auxiliary_methods.WriteInColor($"Press <DarkYellow [1]\\> to show next twisted word, <DarkYellow [2]\\> to try enttwisting, <DarkYellow [3]\\> to restart or <DarkYellow [4]\\> to exit.");
                         var readKey = Console.ReadKey(true);
 
                         switch (readKey.Key)
@@ -170,10 +173,10 @@ namespace MrTwister
                 }
                 else //hier kommt er nur her wenn es das letzte Wort der Liste ist und über 3 Buchstaben hat
                 {
+                    Auxiliary_methods.WriteInColor("Press <DarkYellow [1]\\> to try enttwisting, <DarkYellow [2]\\> to restart or <DarkYellow [3]\\> to exit.");
                     bool validKey = false;
                     while (!validKey)
                     {
-                        Auxiliary_methods.WriteInColor("Press <DarkYellow [1]\\> to try enttwisting, <DarkYellow [2]\\> to restart or <DarkYellow [3]\\> to exit.");
                         var readKey = Console.ReadKey(true);
 
                         switch (readKey.Key)
@@ -216,9 +219,9 @@ namespace MrTwister
         
         private void RestartOrExitDialog()
         {
+            Auxiliary_methods.WriteInColor("Press <DarkYellow [1]\\> to restart or <DarkYellow [2]\\> to exit.");
             while (true)
             {
-                Auxiliary_methods.WriteInColor("Press <DarkYellow [1]\\> to restart or <DarkYellow [2]\\> to exit.");
                 var readKey = Console.ReadKey();
 
                 switch (readKey.Key)
