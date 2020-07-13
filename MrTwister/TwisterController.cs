@@ -50,7 +50,7 @@ namespace MrTwister
                 //alten Twister disposen?
                 StartTwister();
             }
-            var twistedInput = twister.Twist(wordList);
+            var twistedInput = twister.Twist(wordList).ToList();
             var inputSanitizingRegEx = new Regex(@"^[a-zA-Z]+$");
             string twistedWord = string.Empty;
             //foreach (var twistedWord in twistedInput)
